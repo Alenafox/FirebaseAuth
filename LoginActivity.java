@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     Button signOut;
     TextView email, name;
     ImageView photo;
+    Uri photo_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,10 @@ public class LoginActivity extends AppCompatActivity {
         if (signInAccount != null){
             name.setText(signInAccount.getDisplayName());
             email.setText(signInAccount.getEmail());
+            photo_url = signInAccount.getPhotoUrl();
+            //imageView.load("https://www.example.com/image.jpg")
+            Picasso.get().load(photo_url).into(photo);
+            //photo.load(photo_url);
         }
 
         View.OnClickListener butViewClickListener = new View.OnClickListener() {
@@ -44,9 +49,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                setResult(RESULT_OK, intent);
                 startActivity(intent);
             };
         };
-        findViewById(R.id.sign_in_button).setOnClickListener(butViewClickListener);
+        findViewById(R.id.sign_out_button).setOnClickListener(butViewClickListener);
     }
 }
